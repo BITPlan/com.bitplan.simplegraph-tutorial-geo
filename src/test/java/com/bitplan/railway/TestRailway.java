@@ -24,15 +24,11 @@ import static org.junit.Assert.assertTrue;
  * limitations under the License.
  */
 import java.io.File;
-import java.util.HashMap;
-import java.util.List;
 
 import org.junit.Test;
 
 import com.bitplan.simplegraph.core.SimpleNode;
 import com.bitplan.simplegraph.excel.ExcelSystem;
-import com.bitplan.simplegraph.impl.SimpleGraphImpl;
-import com.bitplan.simplegraph.map.MapNode;
 
 /**
  * test railway example
