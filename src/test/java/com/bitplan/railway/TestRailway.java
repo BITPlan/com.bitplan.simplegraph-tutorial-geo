@@ -23,12 +23,16 @@ package com.bitplan.railway;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
 
 import org.junit.Test;
 
+import com.bitplan.simplegraph.core.SimpleGraph;
 import com.bitplan.simplegraph.core.SimpleNode;
 import com.bitplan.simplegraph.excel.ExcelSystem;
 import com.bitplan.simplegraph.impl.SimpleGraphImpl;
+import com.bitplan.simplegraph.impl.SimpleNodeImpl;
 
 /**
  * test railway example
@@ -49,7 +53,8 @@ public class TestRailway {
     String testCities = testBase+"cities.xlsx";
     String testStations = testBase+"railway-stations.xlsx";
     String testStredas = testBase+"railway-db-streda.xlsx";
-    // cities
+    
+    // create cities
     ExcelSystem ec = new ExcelSystem();
     ec.connect();
     File cityFile = new File(testCities);
@@ -75,7 +80,8 @@ public class TestRailway {
       //MNode mn = new MNode(sg, "city", new String[2]); // null);
       //mn.setVertexFromMap(map);
     }
-    // stations
+    
+    // create stations
     ExcelSystem es = new ExcelSystem();
     es.connect();
     File stationFile = new File(testStations);
@@ -104,15 +110,15 @@ public class TestRailway {
           map.put("category", "station");
           map.put("type", "railway");
 
-          List<Object> geoVal = es.g().V().has("Station-Name", stationName)
+          List<Object> geoVal = es.g().V().has("Station-name", stationName)
               .values("geo").toList();
-          // geoVal liefert 0 Ergebnisse
+
           System.out.print(", geo: " + geoVal);
           map.put("geo", geoVal.size() > 0 ? geoVal.get(0) : "");
 
-          List<Object> lineNums = es.g().V().has("Station-Name", stationName)
+          List<Object> lineNums = es.g().V().has("Station-name", stationName)
               .values("Line-number").toList();
-          // lineNUms liefert 0 Ergebnisse
+
           if (lineNums.size() > 0) {
             String[] lines = ((String) lineNums.get(0)).split(",");
             for (int k = 0; k < lines.length; k++) {
@@ -122,12 +128,12 @@ public class TestRailway {
           }
           System.out.println();
 
-          //MNode mn = new MNode(sg, "station", new String[2]); // null);
-          //mn.setVertexFromMap(map);
+          RailwayStationNode rs = new RailwayStationNode(sg, "station", new String[2]); // null);
+          rs.setVertexFromMap(map);
 
           // add edge from city to station
-          // sg.g().V().has("city", cityName).addE("station").to(mn.getVertex());
-          // keine Kanten vorhanden
+          sg.g().V().has("city", cityName).addE("station").to(rs.getVertex());
+          // error - no edges
         }
       }
     }
@@ -137,5 +143,33 @@ public class TestRailway {
     // sg.g().V().has("city").group().outE("station");
     System.out.println();
   }
+  
+  class RailwayStationNode extends SimpleNodeImpl{
+
+		public RailwayStationNode(SimpleGraph simpleGraph, String kind, String[] keys) {
+			super(simpleGraph, kind, keys);
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		public Map<String, Object> initMap() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Stream<SimpleNode> out(String edgeName) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Stream<SimpleNode> in(String edgeName) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+  	
+  }
+  
 
 }
