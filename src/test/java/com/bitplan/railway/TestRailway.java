@@ -50,11 +50,13 @@ public class TestRailway {
      * we get our data from some excel tables
      */
     String testBase="src/test/data/railway/";
-    String testCities = testBase+"cities.xlsx";
-    String testStations = testBase+"railway-stations.xlsx";
-    String testStredas = testBase+"railway-db-streda.xlsx";
+    String testCities = testBase + "cities.xlsx";
+    String testStations = testBase + "railway-stations.xlsx";
+    String testStredas = testBase + "railway-db-streda.xlsx";
     
-    // create cities
+    /**
+     * read the cities excel file and create CityNodes
+     */
     ExcelSystem ec = new ExcelSystem();
     ec.connect();
     File cityFile = new File(testCities);
@@ -81,7 +83,9 @@ public class TestRailway {
       rs.setVertexFromMap(map);
     }
     
-    // create stations
+    /**
+     * read the railway stations and create RailwayStationNodes
+     */
     ExcelSystem es = new ExcelSystem();
     es.connect();
     File stationFile = new File(testStations);
@@ -131,7 +135,9 @@ public class TestRailway {
           RailwayStationNode rs = new RailwayStationNode(sg, "station", new String[2]); // null);
           rs.setVertexFromMap(map);
 
-          // add edge from city to station
+          /**
+           * add edge from current city to current railway station
+           */
           sg.g().V().has("city", cityName).addE("station").to(rs.getVertex());
           // error - no edges
         }
@@ -142,33 +148,6 @@ public class TestRailway {
 
     // sg.g().V().has("city").group().outE("station");
     System.out.println();
-  }
-  
-  class RailwayStationNode extends SimpleNodeImpl{
-
-		public RailwayStationNode(SimpleGraph simpleGraph, String kind, String[] keys) {
-			super(simpleGraph, kind, keys);
-			// TODO Auto-generated constructor stub
-		}
-
-		@Override
-		public Map<String, Object> initMap() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public Stream<SimpleNode> out(String edgeName) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public Stream<SimpleNode> in(String edgeName) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-  	
   }
   
 
