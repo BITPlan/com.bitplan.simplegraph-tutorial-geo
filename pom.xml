@@ -1,0 +1,75 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.bitplan.pom</groupId>
+		<artifactId>com.bitplan.pom</artifactId>
+		<version>0.0.14</version>
+		<relativePath>../com.bitplan.pom/pom.xml</relativePath>
+	</parent>
+	<groupId>com.bitplan.simplegraph-tutorial-geo</groupId>
+	<artifactId>com.bitplan.simplegraph-tutorial-geo</artifactId>
+	<version>0.0.1</version>
+	<name>SimpleGraph Geo Tutorial</name>
+	<description>Geo-Tutorial for SimpleGraph</description>
+	<ciManagement>
+		<system>Travis</system>
+	</ciManagement>
+	<properties>
+		<!-- for parent pom to work -->
+		<github.project>com.bitplan.simplegraph-tutorial-geo</github.project>
+		<!-- for readme generation 
+		<documentation.wiki>http://www.bitplan.com/Sprinkler</documentation.wiki>-->
+	</properties>
+	<dependencies>
+		<!-- JUnit testing -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.hamcrest/hamcrest-all -->
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-all</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.bitplan.gui/com.bitplan.javafx -->
+		<dependency>
+			<groupId>com.bitplan.gui</groupId>
+			<artifactId>com.bitplan.javafx</artifactId>
+		</dependency>
+		<dependency>
+				<groupId>com.bitplan.simplegraph</groupId>
+				<artifactId>com.bitplan.simplegraph-core</artifactId>
+		</dependency>
+		<dependency>
+				<groupId>com.bitplan.simplegraph</groupId>
+				<artifactId>com.bitplan.simplegraph.excel</artifactId>
+		</dependency>
+		<!-- TestI18n dependency -->
+		<dependency>
+			<groupId>com.bitplan.gui</groupId>
+			<artifactId>com.bitplan.gui</artifactId>
+			<type>test-jar</type>
+			<scope>test</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.mockito/mockito-all -->
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	<build>
+	</build>
+</project>
