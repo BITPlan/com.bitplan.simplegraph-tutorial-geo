@@ -1,5 +1,8 @@
 package com.bitplan.railway;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 /**
  * Copyright (c) 2018 BITPlan GmbH
  *
@@ -23,132 +26,60 @@ package com.bitplan.railway;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Stream;
 
 import org.junit.Test;
 
-import com.bitplan.simplegraph.core.SimpleGraph;
 import com.bitplan.simplegraph.core.SimpleNode;
 import com.bitplan.simplegraph.excel.ExcelSystem;
 import com.bitplan.simplegraph.impl.SimpleGraphImpl;
-import com.bitplan.simplegraph.impl.SimpleNodeImpl;
+import com.bitplan.simplegraph.map.MapNode;
 
 /**
  * test railway example
+ * 
  * @author wf
  *
  */
 public class TestRailway {
 
-  public static boolean debug=false;
-  
+  public static boolean debug = false;
+
   @Test
   public void testReadStations() throws Exception {
-    
+
     /**
      * we get our data from some excel tables
      */
-    String testBase="src/test/data/railway/";
-    String testCities = testBase + "cities.xlsx";
-    String testStations = testBase + "railway-stations.xlsx";
-    String testStredas = testBase + "railway-db-streda.xlsx";
-    
+    File railwayExcel = new File("src/test/data/railway/Railway.xlsx");
+    assertTrue(railwayExcel.exists());
+
+    String entityNames[] = { "City", "Station", "Route" };
+    int expectedCount[] = { 12, 18, 4 };
     /**
      * read the cities excel file and create CityNodes
      */
-    ExcelSystem ec = new ExcelSystem();
-    ec.connect();
-    File cityFile = new File(testCities);
-    ec.moveTo(cityFile.toURI().toString());
     debug = true;
-    // if (debug) ec.forAll(SimpleNode.printDebug);
-    long cityCount = ec.g().V().has("city").count().next().longValue();
-    System.out.println("amount cities: " + cityCount);
-
-    List<Object> cityList = ec.g().V().values("city").toList();
-
-    SimpleGraphImpl sg = new SimpleGraphImpl(null);
-    for (int i = 0; i < cityCount; i++) {
-      String cityName = (String) cityList.get(i);
-      List<Object> geoVal = ec.g().V().has("city", cityName).values("geo")
-          .toList();
-
-      HashMap<String, Object> map = new HashMap<String, Object>();
-      map.put("category", "city");
-      map.put("name", cityName);
-      map.put("geo", geoVal.get(0));
-
-      RailwayStationNode rs = new RailwayStationNode(sg, "city", new String[2]); // null);
-      rs.setVertexFromMap(map);
-    }
-    
-    /**
-     * read the railway stations and create RailwayStationNodes
-     */
     ExcelSystem es = new ExcelSystem();
     es.connect();
-    File stationFile = new File(testStations);
-    es.moveTo(stationFile.toURI().toString());
-    long stationCount = es.g().V().count().next().longValue();
-    long stationCities = es.g().V().values("city").dedup().count().next()
-        .longValue();
-    System.out.println("amount stations: " + stationCount);
-    System.out.println("amount station cities: " + stationCities);
+    es.moveTo(railwayExcel.toURI().toString());
+    if (debug)
+      es.forAll(SimpleNode.printDebug);
 
-    for (int i = 0; i < stationCities; i++) {
-      String cityName = (String) cityList.get(i);
+    for (int i = 0; i < entityNames.length; i++) {
+      String entityName = entityNames[i];
 
-      List<Object> stations = es.g().V().has("city", cityName)
-          .values("Station-name").toList();
-      System.out.println(
-          (i + 1) + ", " + cityName + ", stations: " + stations.size());
-      if (stations.size() > 0) {
-        for (int j = 0; j < stations.size(); j++) {
-          HashMap<String, Object> map = new HashMap<String, Object>();
-
-          String stationName = (String) stations.get(j);
-          System.out.print("    " + stationName);
-          map.put("city", cityName);
-          map.put("name", stationName);
-          map.put("category", "station");
-          map.put("type", "railway");
-
-          List<Object> geoVal = es.g().V().has("Station-name", stationName)
-              .values("geo").toList();
-
-          System.out.print(", geo: " + geoVal);
-          map.put("geo", geoVal.size() > 0 ? geoVal.get(0) : "");
-
-          List<Object> lineNums = es.g().V().has("Station-name", stationName)
-              .values("Line-number").toList();
-
-          if (lineNums.size() > 0) {
-            String[] lines = ((String) lineNums.get(0)).split(",");
-            for (int k = 0; k < lines.length; k++) {
-              System.out.print(", " + lines[k]);
-              map.put("linenumber", lines[k]);
-            }
-          }
-          System.out.println();
-
-          RailwayStationNode rs = new RailwayStationNode(sg, "station", new String[2]); // null);
-          rs.setVertexFromMap(map);
-
-          /**
-           * add edge from current city to current railway station
-           */
-          sg.g().V().has("city", cityName).addE("station").to(rs.getVertex());
-          // error - no edges
-        }
-      }
+      long entityCount = es.g().V().hasLabel(entityName).count().next()
+          .longValue();
+      assertEquals(expectedCount[i], entityCount);
     }
-    System.out.println();
-    sg.forAll(SimpleNode.printDebug);
+
+    /**
+     * add edge from current city to current railway station
+     * 
+     * sg.g().V().has("city", cityName).addE("station").to(rs.getVertex()); //
+     * error - no edges
+     */
 
     // sg.g().V().has("city").group().outE("station");
-    System.out.println();
   }
-  
-
 }

@@ -19,8 +19,7 @@
 	<properties>
 		<!-- for parent pom to work -->
 		<github.project>com.bitplan.simplegraph-tutorial-geo</github.project>
-		<!-- for readme generation 
-		<documentation.wiki>http://www.bitplan.com/Sprinkler</documentation.wiki>-->
+		<!-- for readme generation <documentation.wiki>http://www.bitplan.com/Sprinkler</documentation.wiki> -->
 	</properties>
 	<dependencies>
 		<!-- JUnit testing -->
@@ -49,12 +48,17 @@
 			<artifactId>com.bitplan.javafx</artifactId>
 		</dependency>
 		<dependency>
-				<groupId>com.bitplan.simplegraph</groupId>
-				<artifactId>com.bitplan.simplegraph-core</artifactId>
+			<groupId>com.bitplan.simplegraph</groupId>
+			<artifactId>com.bitplan.simplegraph-core</artifactId>
 		</dependency>
 		<dependency>
-				<groupId>com.bitplan.simplegraph</groupId>
-				<artifactId>com.bitplan.simplegraph.excel</artifactId>
+			<groupId>com.bitplan.simplegraph</groupId>
+			<artifactId>com.bitplan.simplegraph.excel</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.bitplan.simplegraph</groupId>
+			<artifactId>com.bitplan.simplegraph.map</artifactId>
+			<version>0.0.2</version>
 		</dependency>
 		<!-- TestI18n dependency -->
 		<dependency>
