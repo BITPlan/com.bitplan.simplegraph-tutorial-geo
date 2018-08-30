@@ -77,8 +77,8 @@ public class TestRailway {
       map.put("name", cityName);
       map.put("geo", geoVal.get(0));
 
-      //MNode mn = new MNode(sg, "city", new String[2]); // null);
-      //mn.setVertexFromMap(map);
+      RailwayStationNode rs = new RailwayStationNode(sg, "city", new String[2]); // null);
+      rs.setVertexFromMap(map);
     }
     
     // create stations
