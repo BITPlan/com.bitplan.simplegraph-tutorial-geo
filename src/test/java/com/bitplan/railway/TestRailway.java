@@ -25,6 +25,7 @@ import static org.junit.Assert.assertTrue;
  */
 import java.io.File;
 
+import org.apache.tinkerpop.gremlin.structure.Graph;
 import org.junit.Test;
 
 import com.bitplan.simplegraph.core.SimpleNode;
@@ -49,8 +50,6 @@ public class TestRailway {
     File railwayExcel = new File("src/test/data/railway/Railway.xlsx");
     assertTrue(railwayExcel.exists());
 
-    String entityNames[] = { "City", "Station", "Route" };
-    int expectedCount[] = { 12, 18, 4 };
     /**
      * read the cities excel file and create CityNodes
      */
@@ -58,24 +57,11 @@ public class TestRailway {
     ExcelSystem es = new ExcelSystem();
     es.connect();
     es.moveTo(railwayExcel.toURI().toString());
+    Graph rg = es.asGraph();
     if (debug)
-      es.forAll(SimpleNode.printDebug);
-
-    for (int i = 0; i < entityNames.length; i++) {
-      String entityName = entityNames[i];
-
-      long entityCount = es.g().V().hasLabel(entityName).count().next()
-          .longValue();
-      assertEquals(expectedCount[i], entityCount);
-    }
-
-    /**
-     * add edge from current city to current railway station
-     * 
-     * sg.g().V().has("city", cityName).addE("station").to(rs.getVertex()); //
-     * error - no edges
-     */
-
-    // sg.g().V().has("city").group().outE("station");
+      SimpleNode.dumpGraph(rg);
+    assertEquals(12,rg.traversal().V().hasLabel("City").count().next().longValue());
+    assertEquals(18,rg.traversal().V().hasLabel("Station").count().next().longValue());
+    assertEquals(4,rg.traversal().E().hasLabel("Route").count().next().longValue());
   }
 }
