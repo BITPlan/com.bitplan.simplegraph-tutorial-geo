@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.bitplan.pom</groupId>
 		<artifactId>com.bitplan.pom</artifactId>
-		<version>0.0.14</version>
+		<version>0.0.16</version>
 		<relativePath>../com.bitplan.pom/pom.xml</relativePath>
 	</parent>
 	<groupId>com.bitplan.simplegraph-tutorial-geo</groupId>
@@ -50,17 +50,14 @@
 		<dependency>
 			<groupId>com.bitplan.simplegraph</groupId>
 			<artifactId>com.bitplan.simplegraph-core</artifactId>
-			<version>0.0.3</version>
 		</dependency>
 		<dependency>
 			<groupId>com.bitplan.simplegraph</groupId>
 			<artifactId>com.bitplan.simplegraph.excel</artifactId>
-			<version>0.0.3</version>
 		</dependency>
 		<dependency>
 			<groupId>com.bitplan.simplegraph</groupId>
 			<artifactId>com.bitplan.simplegraph.map</artifactId>
-			<version>0.0.3</version>
 		</dependency>
 		<!-- TestI18n dependency -->
 		<dependency>
