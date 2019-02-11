@@ -1,4 +1,4 @@
-package com.bitplan.railway;
+package com.bitplan.simplegraph.geotutorial;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
