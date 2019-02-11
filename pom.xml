@@ -19,7 +19,8 @@
 	<properties>
 		<!-- for parent pom to work -->
 		<github.project>com.bitplan.simplegraph-tutorial-geo</github.project>
-		<!-- for readme generation <documentation.wiki>http://www.bitplan.com/Sprinkler</documentation.wiki> -->
+		<!-- for readme generation -->
+		<documentation.wiki>http://wiki.bitplan.com/index.php/SimpleGraph-Tutorial/Geo</documentation.wiki>
 	</properties>
 	<dependencies>
 		<!-- JUnit testing -->
