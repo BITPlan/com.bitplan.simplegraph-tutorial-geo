@@ -39,6 +39,30 @@ import com.bitplan.simplegraph.json.JsonSystem;
 public class TestChargingStations {
 
   boolean debug = false;
+  ExcelSystem baExcelSystem = null;
+
+  /**
+   * get the Excel File for ChargingStations 
+   * @return
+   * @throws Exception
+   */
+  public ExcelSystem getBundesnetzAgenturChargingStations() throws Exception {
+    // The original file has some superfluous sheets and the title row is not
+    // in the first line so we downloaded and adapted it a bit to avoid to do
+    // this in software e.g.
+    // as outlined in
+    // https://stackoverflow.com/questions/1834971/removing-a-row-from-an-excel-sheet-with-apache-poi-hssf
+    // String url =
+    // "https://www.bundesnetzagentur.de/SharedDocs/Downloads/DE/Sachgebiete/Energie/Unternehmen_Institutionen/HandelundVertrieb/Ladesaeulen/Ladesaeulenkarte_Datenbankauszug20.xlsx?__blob=publicationFile&v=2";
+    if (baExcelSystem == null) {
+      File excelFile = new File(
+          "src/test/data/Bundesnetzagentur/Ladesaeulenkarte_Datenbankauszug20.xlsx");
+      baExcelSystem = new ExcelSystem();
+      baExcelSystem.connect();
+      baExcelSystem.moveTo(excelFile.toURI().toString());
+    }
+    return baExcelSystem;
+  }
 
   /**
    * test reading the list of registered german charging stations from
@@ -48,23 +72,21 @@ public class TestChargingStations {
    */
   @Test
   public void testBundesnetzagentur() throws Exception {
-    // The original file has some superfluous sheets and the title row is not
-    // in the first line so we downloaded and adapted it a bit to avoid to do
-    // this in software e.g.
-    // as outlined in
-    // https://stackoverflow.com/questions/1834971/removing-a-row-from-an-excel-sheet-with-apache-poi-hssf
-    // String url =
-    // "https://www.bundesnetzagentur.de/SharedDocs/Downloads/DE/Sachgebiete/Energie/Unternehmen_Institutionen/HandelundVertrieb/Ladesaeulen/Ladesaeulenkarte_Datenbankauszug20.xlsx?__blob=publicationFile&v=2";
-    File excelFile = new File(
-        "src/test/data/Bundesnetzagentur/Ladesaeulenkarte_Datenbankauszug20.xlsx");
-    ExcelSystem es = new ExcelSystem();
-    es.connect();
-    es.moveTo(excelFile.toURI().toString());
+    ExcelSystem es=this.getBundesnetzAgenturChargingStations();
     long count = es.g().V().count().next().longValue();
     assertEquals(7733, count);
     if (debug)
       SimpleNode.dumpGraph(es.graph());
-    es.g().V().has("row").limit(100).forEachRemaining(v -> {
+  }
+
+  @Test
+  public void testOpenChargeMapApi() throws Exception {
+    ExcelSystem es=this.getBundesnetzAgenturChargingStations();
+    // number of stations to check
+    int limit=20;
+    // number of stations nearby to get from open chargemap api
+    int maxresults = 3;
+    es.g().V().has("row").limit(limit).forEachRemaining(v -> {
       if (debug)
         SimpleNode.printDebug.accept(v);
       String address = v.property("Adresse").value().toString();
@@ -75,8 +97,7 @@ public class TestChargingStations {
           .parseDouble(v.property("Längengrad [DG]").value().toString());
       System.out.println(
           String.format("%30s %30s %.4f %.4f", ziploc, address, lat, lon));
-      // get up to 3 stations nearby
-      int maxresults = 3;
+     
       String apiUrl = String.format(Locale.ENGLISH,
           "http://api.openchargemap.io/v2/poi/?output=json&latitude=%.4f8&longitude=%.4f&maxresults=10",
           lat, lon, maxresults);
@@ -87,27 +108,29 @@ public class TestChargingStations {
         fail(e.getMessage());
       }
       js.moveTo(apiUrl);
-      
-      GraphTraversal<Vertex, Vertex> addressesByDistance = js.g().V().hasLabel("AddressInfo").order().by("Distance");
+
+      GraphTraversal<Vertex, Vertex> addressesByDistance = js.g().V()
+          .hasLabel("AddressInfo").order().by("Distance");
       assertTrue(addressesByDistance.hasNext());
       Vertex av = addressesByDistance.next();
-      double maxDist=1.0;
+      double maxDist = 1.0;
       Number adistance = (Number) av.property("Distance").value();
-      Number alat=(Number)av.property("Latitude").value();
-      Number alon=(Number)av.property("Longitude").value();
+      Number alat = (Number) av.property("Latitude").value();
+      Number alon = (Number) av.property("Longitude").value();
       // assertTrue(adistance.doubleValue()<maxDist);
-      String azip=av.property("Postcode").value().toString();
-      String acity=av.property("Town").value().toString();
-      String aadr=av.property("AddressLine1").value().toString();
-      
-      System.out.println(
-          String.format("%30s %30s %.4f %.4f: %.3f km", azip+" "+acity, aadr, alat.doubleValue(), alon.doubleValue(),adistance.doubleValue()));
-      
+      String azip = av.property("Postcode").value().toString();
+      String acity = av.property("Town").value().toString();
+      String aadr = av.property("AddressLine1").value().toString();
+
+      System.out.println(String.format("%30s %30s %.4f %.4f: %.3f km",
+          azip + " " + acity, aadr, alat.doubleValue(), alon.doubleValue(),
+          adistance.doubleValue()));
+
       if (debug) {
         SimpleNode.printDebug.accept(av);
         SimpleNode.dumpGraph(js.graph());
       }
-       
+
     });
 
   }
